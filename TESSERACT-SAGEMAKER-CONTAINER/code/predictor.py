@@ -40,6 +40,7 @@ def invocations():
     data = flask.request.data.decode('utf-8')
     s = StringIO(data)
     df = pd.read_csv(s, header=None)
+    outputFiles=[]
     for index, row in df.iterrows():
         (input_bucket,input_path,input_name,output_bucket,output_path,output_name)=row
         os.environ['INPUT_BUCKET_NAME']=input_bucket
@@ -50,10 +51,11 @@ def invocations():
         os.environ['OUTPUT_FILE_NAME']=output_name
         os.environ['DOC_LANG']='ita_impact'
         os.system('/bin/bash process_tesseract.sh')
+        outputFiles.append({"fileName":"{}/{}/{}".format(output_bucket,output_path,output_name) })
         
     print ("Returning")
     # Convert result to JSON
-    return_value = { "predictions": {} }
+    return_value = { "predictions": outputFiles }
     #return_value["predictions"]["class"] = str(predictions[0])
     print(return_value)
 

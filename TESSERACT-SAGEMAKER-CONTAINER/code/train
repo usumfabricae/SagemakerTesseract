@@ -17,8 +17,8 @@ with open(param_path, 'r') as tc:
     print ("Training Params")
     print (trainingParams)
 
-with open(inputdata_path, 'r') as tc:
-    inputParams = json.load(tc)
+with open(inputdata_path, 'r') as ip:
+    inputParams = json.load(ip)
     print ("Input Params")
     print (inputParams)
 

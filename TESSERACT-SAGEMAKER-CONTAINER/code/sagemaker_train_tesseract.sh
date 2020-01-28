@@ -35,7 +35,7 @@ echo -e "\n***** Making evaluation data for itaeval set for scratch and impact t
 tesstrain.sh --fonts_dir /usr/share/fonts --lang ita --linedata_only \
   --noextract_font_properties --langdata_dir ${LANG_DATA} \
   --tessdata_dir ${MODEL_OUTPUT_DIR} \
-  --fontlist "Impact Condensed" --output_dir ${TMP_EVAL_DATA} 2>/dev/null
+  --fontlist "Impact Condensed" --output_dir ${TMP_EVAL_DATA} 1>/dev/null 2>&1
   
 
 echo -e "\n***** Extract LSTM model from best traineddata. \n"
@@ -50,7 +50,9 @@ lstmtraining \
   --traineddata ${MODEL_OUTPUT_DIR}/ita.traineddata \
   --train_listfile ${TMP_TRAINING_DATA}/ita.training_files.txt \
   --debug_interval -1 \
-  --max_iterations 100 
+  --max_iterations 100 2>/tmp/lstmtraining.log
+  
+tail -1 /tmp/lstmtraining.log
   
 echo -e "\n***** Continue lstmtraining till ${SM_EPOCH} iterations. \n"
 lstmtraining \
@@ -59,21 +61,27 @@ lstmtraining \
   --traineddata ${MODEL_OUTPUT_DIR}/ita.traineddata \
   --train_listfile ${TMP_TRAINING_DATA}/ita.training_files.txt \
   --debug_interval 0 \
-  --max_iterations ${SM_EPOCH} 2>/dev/null
+  --max_iterations ${SM_EPOCH} 2>/tmp/lstmtraining.log
+  
+tail -1 /tmp/lstmtraining.log
   
 echo -e "\n***** Run lstmeval on eval set. \n"
 lstmeval \
   --verbosity 0 \
   --model ${MODEL_TRAINING_DIR}/impact_checkpoint \
   --traineddata ${MODEL_OUTPUT_DIR}/ita.traineddata \
-  --eval_listfile ${TMP_EVAL_DATA}/ita.training_files.txt 2>/dev/null
+  --eval_listfile ${TMP_EVAL_DATA}/ita.training_files.txt 2>/tmp/lstmtraining.log
+  
+tail -1 /tmp/lstmtraining.log  
   
 echo -e "\n***** Run lstmeval on itatrain set. \n"
 lstmeval \
   --verbosity 0 \
   --model ${MODEL_TRAINING_DIR}/impact_checkpoint \
   --traineddata ${MODEL_OUTPUT_DIR}/ita.traineddata \
-  --eval_listfile ${TMP_TRAINING_DATA}/ita.training_files.txt 2>/dev/null
+  --eval_listfile ${TMP_TRAINING_DATA}/ita.training_files.txt 2>/tmp/lstmtraining.log
+  
+tail -1 /tmp/lstmtraining.log 
   
 echo -e "\n***** Stop lstmtraining and convert to traineddata. \n"
 lstmtraining \
