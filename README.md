@@ -1,13 +1,15 @@
 # SagemakerTesseract
-Example to build a custom Sagemaker container for tesseract.
-**As it is it is supporting only Italian language but can be easily extended to other languages supported by Tesseract.  
-It handle pdf as input and generates a indexed pdf file (the same original pdf with test underneath the image) and an HOCR file for each page of the original pdf document archived in a tar.gz file **
+Example to build a custom Sagemaker container for tesseract.  
+**As it is it is:**
+* **based on Ubuntu image and tesseract included in Ubuntu distro**  
+* **supports only Italian language but can be easily extended to other languages included in Tesseract package.**  
+* **handles pdf as input and generates a indexed pdf file (the same original pdf with test underneath the image) and an HOCR file for each page of the original pdf document archived in a tar.gz file**  
 
 
 Once the container has been build it can be used for:
-* Training on new custom fonts
-* Create an endpoint for prediction
-* Create batch prediction
+* Training tesseract to build new models to support new custom fonts
+* Create an endpoint for prediction 
+* Run batch prediction
 
 
 ## Training
